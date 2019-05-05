@@ -46,8 +46,8 @@ public class MainFrameTest extends JFCTestCase {
         final JTable table = (JTable) find(JTable.class, "userTable");
         assertEquals(3, table.getColumnCount());
         assertEquals("ID", table.getColumnName(0));
-        assertEquals("Имя", table.getColumnName(1));
-        assertEquals("Фамилия", table.getColumnName(2));
+        assertEquals("First Name", table.getColumnName(1));
+        assertEquals("Last Name", table.getColumnName(2));
 
         find(JButton.class, "addButton");
         find(JButton.class, "editButton");
