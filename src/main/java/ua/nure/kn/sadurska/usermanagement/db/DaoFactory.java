@@ -3,43 +3,45 @@ package ua.nure.kn.sadurska.usermanagement.db;
 import java.io.IOException;
 import java.util.Properties;
 
-public class DaoFactory {
+public abstract class DaoFactory {
 
-    public static final String USER_DAO = "dao.ua.nure.kn.sadurska.usermanagement.db.UserDao";
-    private final Properties properties;
+    protected static final String USER_DAO = "dao.ua.nure.kn.sadurska.usermanagement.db.UserDao";
+    private static final String DAO_FACTORY = "dao.factory";
+    protected static Properties properties = new Properties();
 
-    private static final DaoFactory INSTANCE = new DaoFactory();
+    private static DaoFactory INSTANCE;
 
-    public static DaoFactory getInstance() {
-        return INSTANCE;
-    }
-
-    private DaoFactory() {
+    static {
         try {
-            properties = new Properties();
-            properties.load(getClass().getClassLoader().getResourceAsStream("settings.properties"));
-        } catch (final IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public ConnectionFactory getConnectionFactory() {
-        final String user = properties.getProperty("connection.user");
-        final String password = properties.getProperty("connection.password");
-        final String url = properties.getProperty("connection.url");
-        final String driver = properties.getProperty("connection.driver");
-        return new ConnectionFactoryImpl(driver, url, user, password);
-    }
-
-    public UserDao getUserDao() {
-        UserDao userDao = null;
-        try {
-            final Class clazz = Class.forName(properties.getProperty(USER_DAO));
-            userDao = (UserDao) clazz.newInstance();
-            userDao.setConnectionFactory(getConnectionFactory());
+            properties.load(DaoFactory.class.getClassLoader().getResourceAsStream("settings.properties"));
         } catch (final Exception e) {
             throw new RuntimeException(e);
         }
-        return userDao;
     }
+
+    public static synchronized DaoFactory getInstance() {
+        try {
+            if (INSTANCE == null) {
+                final Class factoryClass = Class.forName(properties.getProperty(DAO_FACTORY));
+                INSTANCE = (DaoFactory) factoryClass.newInstance();
+            }
+            return INSTANCE;
+        } catch (final Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    protected DaoFactory() {
+    }
+
+    public static void init(final Properties properties) {
+        DaoFactory.properties = properties;
+        INSTANCE = null;
+    }
+
+    public ConnectionFactory getConnectionFactory() {
+        return new ConnectionFactoryImpl(properties);
+    }
+
+    public abstract UserDao getUserDao();
 }

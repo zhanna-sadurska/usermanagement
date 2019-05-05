@@ -3,6 +3,7 @@ package ua.nure.kn.sadurska.usermanagement.db;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.Properties;
 
 public class ConnectionFactoryImpl implements ConnectionFactory {
 
@@ -18,18 +19,24 @@ public class ConnectionFactoryImpl implements ConnectionFactory {
         this.password = password;
     }
 
-    public ConnectionFactoryImpl() {
+    public ConnectionFactoryImpl(final Properties properties) {
+        driver = properties.getProperty("connection.driver");
+        url = properties.getProperty("connection.url");
+        user = properties.getProperty("connection.user");
+        password = properties.getProperty("connection.password");
+    }
 
+    public ConnectionFactoryImpl() {
+        driver = "org.hsqldb.jdbcDriver";
+        url = "jdbc:hsqldb:file:db/usermanagement";
+        user = "sa";
+        password = "";
     }
 
     @Override
     public Connection createConnection() throws DatabaseException {
-        final String driverClass = "org.hsqldb.jdbcDriver";
-        final String url = "jdbc:hsqldb:file:db/usermanagement";
-        final String user = "sa";
-        final String password = "";
         try {
-            Class.forName(driverClass).newInstance();
+            Class.forName(driver).newInstance();
         } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException();
