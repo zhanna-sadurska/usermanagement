@@ -27,7 +27,7 @@ public class MainFrameTest extends JFCTestCase {
         final Properties properties = new Properties();
         properties.setProperty("dao.ua.nure.kn.sadurska.usermanagement.db.UserDao", MockUserDao.class.getName());
         properties.setProperty("dao.factory", DaoFactoryImpl.class.getName());
-        DaoFactory.getInstance().init(properties);
+        DaoFactory.init(properties);
 
         setHelper(new JFCTestHelper());
         mainFrame = new MainFrame();
@@ -68,8 +68,8 @@ public class MainFrameTest extends JFCTestCase {
     public void testAddUser() {
         JTable table = (JTable) find(JTable.class, "userTable");
         assertEquals(0, table.getRowCount());
-
         final JButton addButton = (JButton) find(JButton.class, "addButton");
+
         getHelper().enterClickAndLeave(new MouseEventData(this, addButton));
 
         find(JPanel.class, "addPanel");
@@ -88,7 +88,7 @@ public class MainFrameTest extends JFCTestCase {
         getHelper().enterClickAndLeave(new MouseEventData(this, okButton));
 
         find(JPanel.class, "browsePanel");
-        table = (JTable) find(JTextField.class, "userTable");
+        table = (JTable) find(JTable.class, "userTable");
         assertEquals(1, table.getRowCount());
     }
 }

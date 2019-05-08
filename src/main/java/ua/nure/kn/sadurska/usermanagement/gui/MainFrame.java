@@ -1,5 +1,8 @@
 package ua.nure.kn.sadurska.usermanagement.gui;
 
+import ua.nure.kn.sadurska.usermanagement.User;
+import ua.nure.kn.sadurska.usermanagement.db.DaoFactory;
+import ua.nure.kn.sadurska.usermanagement.db.UserDao;
 import ua.nure.kn.sadurska.usermanagement.util.Messages;
 
 import javax.swing.*;
@@ -14,6 +17,8 @@ public class MainFrame extends JFrame {
     private JPanel browsePanel;
     private AddPanel addPanel;
 
+    private final UserDao userDao;
+
     public static void main(String[] args) {
         final MainFrame mainFrame = new MainFrame();
         mainFrame.setVisible(true);
@@ -21,6 +26,7 @@ public class MainFrame extends JFrame {
 
     public MainFrame() {
         super();
+        userDao = DaoFactory.getInstance().getUserDao();
         initialize();
     }
 
@@ -44,6 +50,7 @@ public class MainFrame extends JFrame {
         if (browsePanel == null) {
             browsePanel = new BrowsePanel(this);
         }
+        ((BrowsePanel) browsePanel).initTable();
         return browsePanel;
     }
 
@@ -51,8 +58,19 @@ public class MainFrame extends JFrame {
         showPanel(getAddPanel());
     }
 
+    private AddPanel getAddPanel() {
+        if (addPanel == null) {
+            addPanel = new AddPanel(this);
+        }
+        return addPanel;
+    }
+
     public void showBrowsePanel() {
         showPanel(getBrowsePanel());
+    }
+
+    public void showEditPanel(final User editableUser) {
+        showPanel(new EditPanel(this, editableUser));
     }
 
     private void showPanel(final JPanel panel) {
@@ -61,10 +79,11 @@ public class MainFrame extends JFrame {
         panel.repaint();
     }
 
-    private AddPanel getAddPanel() {
-        if (addPanel == null) {
-            addPanel = new AddPanel(this);
-        }
-        return addPanel;
+    public UserDao getUserDao() {
+        return userDao;
+    }
+
+    public void showDetailsPanel(final User user) {
+        showPanel(new DetailsPanel(this, user));
     }
 }

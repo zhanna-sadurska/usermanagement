@@ -10,8 +10,8 @@ import java.util.List;
 
 public class UserTableModel extends AbstractTableModel {
 
-    private static final String[] COLUMN_NAMES = { "ID", Messages.getString("AddPanel.first_name"), Messages.getString("AddPanel.last_name") };
-    private static final Class[] COLUMN_CLASSES = { Long.class, String.class, String.class };
+    private static final String[] COLUMN_NAMES = {"ID", Messages.getString("AddPanel.first_name"), Messages.getString("AddPanel.last_name")};
+    private static final Class[] COLUMN_CLASSES = {Long.class, String.class, String.class};
     private List<User> users;
 
     public UserTableModel(final Collection<User> users) {
@@ -34,6 +34,14 @@ public class UserTableModel extends AbstractTableModel {
 
     public String getColumnName(final int columnIndex) {
         return COLUMN_NAMES[columnIndex];
+    }
+
+    public User getUserAtRow(final int rowIndex) {
+        if (rowIndex < 0)
+            throw new IllegalArgumentException();
+        if (rowIndex >= users.size())
+            throw new IllegalArgumentException();
+        return users.get(rowIndex);
     }
 
     @Override
