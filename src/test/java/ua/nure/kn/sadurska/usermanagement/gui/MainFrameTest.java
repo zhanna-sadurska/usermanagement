@@ -1,44 +1,60 @@
 package ua.nure.kn.sadurska.usermanagement.gui;
 
+import com.mockobjects.dynamic.Mock;
 import junit.extensions.jfcunit.JFCTestCase;
 import junit.extensions.jfcunit.JFCTestHelper;
 import junit.extensions.jfcunit.TestHelper;
 import junit.extensions.jfcunit.eventdata.MouseEventData;
 import junit.extensions.jfcunit.eventdata.StringEventData;
 import junit.extensions.jfcunit.finder.NamedComponentFinder;
+import ua.nure.kn.sadurska.usermanagement.User;
 import ua.nure.kn.sadurska.usermanagement.db.DaoFactory;
-import ua.nure.kn.sadurska.usermanagement.db.DaoFactoryImpl;
+import ua.nure.kn.sadurska.usermanagement.db.MockDaoFactory;
 import ua.nure.kn.sadurska.usermanagement.db.MockUserDao;
 
 import javax.swing.*;
 import java.awt.*;
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Properties;
 
 public class MainFrameTest extends JFCTestCase {
 
     private MainFrame mainFrame;
+    private Mock mockUserDao;
 
     @Override
     protected void setUp() throws Exception {
         super.setUp();
 
-        final Properties properties = new Properties();
-        properties.setProperty("dao.ua.nure.kn.sadurska.usermanagement.db.UserDao", MockUserDao.class.getName());
-        properties.setProperty("dao.factory", DaoFactoryImpl.class.getName());
-        DaoFactory.init(properties);
+        try {
+            final Properties properties = new Properties();
+            properties.setProperty("dao.factory", MockDaoFactory.class.getName());
+            properties.setProperty("dao.ua.nure.kn.sadurska.usermanagement.db.UserDao", MockUserDao.class.getName());
+            DaoFactory.init(properties);
+            mockUserDao = ((MockDaoFactory) DaoFactory.getInstance()).getMockUserDao();
+            mockUserDao.expectAndReturn("findAll", new ArrayList<User>());
+            setHelper(new JFCTestHelper());
+            mainFrame = new MainFrame();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
-        setHelper(new JFCTestHelper());
-        mainFrame = new MainFrame();
         mainFrame.setVisible(true);
     }
 
     @Override
     protected void tearDown() throws Exception {
-        mainFrame.setVisible(false);
-        TestHelper.cleanUp(this);
-        super.tearDown();
+        try {
+            mockUserDao.verify();
+            mainFrame.setVisible(false);
+            TestHelper.cleanUp(this);
+            super.tearDown();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private Component find(final Class componentClass, final String name) {
@@ -66,6 +82,18 @@ public class MainFrameTest extends JFCTestCase {
     }
 
     public void testAddUser() {
+        final String firstName = "John";
+        final String lastName = "Doe";
+        final Date dateOfBirth = new Date();
+
+        final User user = new User(null, firstName, lastName, dateOfBirth);
+        final User expectedUser = new User(1L, firstName, lastName, dateOfBirth);
+        mockUserDao.expectAndReturn("create", user, expectedUser);
+
+        final ArrayList<User> users = new ArrayList<>();
+        users.add(expectedUser);
+        mockUserDao.expectAndReturn("findAll", users);
+
         JTable table = (JTable) find(JTable.class, "userTable");
         assertEquals(0, table.getRowCount());
         final JButton addButton = (JButton) find(JButton.class, "addButton");
@@ -81,9 +109,9 @@ public class MainFrameTest extends JFCTestCase {
         final JButton okButton = (JButton) find(JButton.class, "okButton");
         final JButton cancelButton = (JButton) find(JButton.class, "cancelButton");
 
-        getHelper().sendString(new StringEventData(this, firstNameField, "John"));
-        getHelper().sendString(new StringEventData(this, lastNameField, "Doe"));
-        getHelper().sendString(new StringEventData(this, dateOfBirthField, DateFormat.getDateInstance().format(new Date())));
+        getHelper().sendString(new StringEventData(this, firstNameField, firstName));
+        getHelper().sendString(new StringEventData(this, lastNameField, lastName));
+        getHelper().sendString(new StringEventData(this, dateOfBirthField, DateFormat.getDateInstance().format(dateOfBirth)));
 
         getHelper().enterClickAndLeave(new MouseEventData(this, okButton));
 
