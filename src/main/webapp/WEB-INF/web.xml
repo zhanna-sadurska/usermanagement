@@ -5,12 +5,12 @@
          version="4.0">
 
     <servlet>
-        <servlet-name>Browse Servlet</servlet-name>
+        <servlet-name>BrowseServlet</servlet-name>
         <servlet-class>ua.nure.kn.sadurska.usermanagement.web.BrowseServlet</servlet-class>
     </servlet>
 
     <servlet-mapping>
-        <servlet-name>Browse Servlet</servlet-name>
+        <servlet-name>BrowseServlet</servlet-name>
         <url-pattern>/browse</url-pattern>
     </servlet-mapping>
 

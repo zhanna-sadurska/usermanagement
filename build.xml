@@ -12,7 +12,7 @@
     <property name="test-resources-dir" value="${basedir}/src/test/resources"/>
     <property name="test-result-dir" value="${build-dir}/test-result"/>
 
-    <property name="war-name" value="users"/>
+    <property name="war-name" value="usermanagement"/>
     <property name="war-dir" value="${build-dir}/${war-name}"/>
     <property name="war-jsp-dir" value="${war-dir}"/>
     <property name="war-webinf-dir" value="${war-dir}/WEB-INF"/>
