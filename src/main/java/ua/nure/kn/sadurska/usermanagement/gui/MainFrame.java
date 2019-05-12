@@ -4,7 +4,6 @@ import ua.nure.kn.sadurska.usermanagement.User;
 import ua.nure.kn.sadurska.usermanagement.db.DaoFactory;
 import ua.nure.kn.sadurska.usermanagement.db.UserDao;
 import ua.nure.kn.sadurska.usermanagement.util.Messages;
-
 import javax.swing.*;
 import java.awt.*;
 

@@ -11,6 +11,7 @@ import ua.nure.kn.sadurska.usermanagement.User;
 import ua.nure.kn.sadurska.usermanagement.db.DaoFactory;
 import ua.nure.kn.sadurska.usermanagement.db.MockDaoFactory;
 import ua.nure.kn.sadurska.usermanagement.db.MockUserDao;
+import ua.nure.kn.sadurska.usermanagement.util.Messages;
 
 import javax.swing.*;
 import java.awt.*;
@@ -72,8 +73,8 @@ public class MainFrameTest extends JFCTestCase {
         final JTable table = (JTable) find(JTable.class, "userTable");
         assertEquals(3, table.getColumnCount());
         assertEquals("ID", table.getColumnName(0));
-        assertEquals("First Name", table.getColumnName(1));
-        assertEquals("Last Name", table.getColumnName(2));
+        assertEquals(Messages.getString("AddPanel.first_name"), table.getColumnName(1));
+        assertEquals(Messages.getString("AddPanel.last_name"), table.getColumnName(2));
 
         find(JButton.class, "addButton");
         find(JButton.class, "editButton");
