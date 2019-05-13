@@ -12,3 +12,4 @@ bin*
 .project
 *.iml
 .idea*
+WebContent

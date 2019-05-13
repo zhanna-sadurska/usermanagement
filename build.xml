@@ -47,7 +47,9 @@
         </copy>
         <copy todir="${war-lib-dir}">
             <fileset dir="${lib-dir}">
-                <include name="**/*.jar"/>
+                <include name="**/hsqldb*.jar"/>
+                <include name="**/jstl*.jar"/>
+                <include name="**/standard*.jar"/>
             </fileset>
         </copy>
         <copy todir="${war-classes-dir}">
@@ -62,13 +64,13 @@
         <delete file="${build-dir}/${war-name}.war" failonerror="no"/>
         <war destfile="${build-dir}/${war-name}.war" webxml="${main-webapp-webinf-dir}/web.xml">
             <fileset dir="${war-jsp-dir}">
-                <exclude name="WEB-INF/*.**"/>
+                <include name="**/*.jsp"/>
             </fileset>
             <classes dir="${war-classes-dir}"/>
             <lib dir="${war-lib-dir}"/>
-            <webinf dir="${war-webinf-dir}">
-                <exclude name="web.xml"/>
-            </webinf>
+<!--            <webinf dir="${war-webinf-dir}">-->
+<!--                <exclude name="web.xml"/>-->
+<!--            </webinf>-->
         </war>
     </target>
 
