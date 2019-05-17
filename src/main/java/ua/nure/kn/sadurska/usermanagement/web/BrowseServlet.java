@@ -68,12 +68,10 @@ public class BrowseServlet extends HttpServlet {
             System.out.println("Correct ID of user: " + id);
             userDao.delete(userDao.find(id));
             forwardPage("/browse.jsp", request, response);
-            return;
         } catch (final Exception e) {
             System.out.println("Exception: " + e.getMessage());
             request.setAttribute("error", "Error: " + e.getMessage());
             forwardPage("/browse.jsp", request, response);
-            return;
         }
     }
 
@@ -83,8 +81,6 @@ public class BrowseServlet extends HttpServlet {
 
     private void browse(HttpServletRequest request, HttpServletResponse response) throws ServletException {
         try {
-            System.out.println("Browse method");
-            System.out.println("Users from DB:");
             final Collection<User> users = DaoFactory.getInstance().getUserDao().findAll();
             System.out.println("Settings users attribute to session: " + users);
             request.getSession().setAttribute("users", users);
@@ -97,7 +93,6 @@ public class BrowseServlet extends HttpServlet {
 
     private void forwardPage(final String page, final HttpServletRequest request, final HttpServletResponse response) throws ServletException, IOException {
         System.out.println("Forwarding to " + page);
-        System.out.println();
         request.getRequestDispatcher(page).forward(request, response);
     }
 }
