@@ -68,9 +68,6 @@
             </fileset>
             <classes dir="${war-classes-dir}"/>
             <lib dir="${war-lib-dir}"/>
-<!--            <webinf dir="${war-webinf-dir}">-->
-<!--                <exclude name="web.xml"/>-->
-<!--            </webinf>-->
         </war>
     </target>
 
