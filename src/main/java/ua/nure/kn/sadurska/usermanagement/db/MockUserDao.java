@@ -5,6 +5,7 @@ import ua.nure.kn.sadurska.usermanagement.User;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class MockUserDao implements UserDao {
 
@@ -36,6 +37,14 @@ public class MockUserDao implements UserDao {
     @Override
     public Collection<User> findAll() {
         return users.values();
+    }
+
+    @Override
+    public Collection<User> find(final String firstName, final String lastName) throws DatabaseException {
+        return users.values().stream()
+                .filter(user -> user.getFirstName().equalsIgnoreCase(firstName))
+                .filter(user -> user.getLastName().equalsIgnoreCase(lastName))
+                .collect(Collectors.toList());
     }
 
     @Override

@@ -107,4 +107,18 @@ public class HsqldbUserDaoTest extends DatabaseTestCase {
             fail(e.toString());
         }
     }
+
+    public void testFindByName() {
+        try {
+            final String FIRST_NAME = "GEORGE";
+            final String LAST_NAME = "BUSH";
+            final Collection<User> bushCollection = userDao.find(FIRST_NAME, LAST_NAME);
+            assertNotNull("Collection is null", bushCollection);
+            assertSame(1, bushCollection.size());
+            bushCollection.stream().findFirst().ifPresent(user -> assertSame(user.getFirstName(), FIRST_NAME));
+            bushCollection.stream().findFirst().ifPresent(user -> assertSame(user.getLastName(), LAST_NAME));
+        } catch (final DatabaseException e) {
+            fail(e.toString());
+        }
+    }
 }

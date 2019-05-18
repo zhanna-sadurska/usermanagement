@@ -47,9 +47,10 @@
         </copy>
         <copy todir="${war-lib-dir}">
             <fileset dir="${lib-dir}">
-                <include name="**/hsqldb*.jar"/>
-                <include name="**/jstl*.jar"/>
-                <include name="**/standard*.jar"/>
+                <exclude name="**/servlet*.jar"/>
+                <exclude name="**/jsp*.jar"/>
+<!--                <include name="**/jstl*.jar"/>-->
+<!--                <include name="**/standard*.jar"/>-->
             </fileset>
         </copy>
         <copy todir="${war-classes-dir}">

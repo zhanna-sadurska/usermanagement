@@ -16,6 +16,8 @@ public interface UserDao {
 
     Collection<User> findAll() throws DatabaseException;
 
+    Collection<User> find(final String firstName, final String lastName) throws DatabaseException;
+
     void setConnectionFactory(final ConnectionFactory connectionFactory);
 
 }

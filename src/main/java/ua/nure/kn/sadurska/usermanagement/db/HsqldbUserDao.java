@@ -4,6 +4,7 @@ import ua.nure.kn.sadurska.usermanagement.User;
 
 import java.sql.*;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.LinkedList;
 
 class HsqldbUserDao implements UserDao {
@@ -13,6 +14,7 @@ class HsqldbUserDao implements UserDao {
     private static final String FIND_USER_BY_ID = "SELECT id, firstname, lastname, dateofbirth from users WHERE id = ?";
     private static final String UPDATE_USER = "UPDATE users SET firstname = ?, lastname = ?, dateofbirth = ? WHERE id = ?";
     private static final String DELETE_USER = "DELETE FROM users WHERE id = ?";
+    private static final String SELECT_BY_NAMES = "SELECT id, firstname, lastname, dateofbirth FROM users WHERE firstname = ? AND lastname = ?";
 
     private ConnectionFactory connectionFactory;
 
@@ -116,6 +118,26 @@ class HsqldbUserDao implements UserDao {
             return result;
         } catch (final SQLException e) {
             throw new DatabaseException(e.getMessage());
+        }
+    }
+
+    @Override
+    public Collection<User> find(final String firstName, final String lastName) throws DatabaseException {
+        try {
+            final Collection<User> result = new LinkedList<>();
+            final Connection connection = connectionFactory.createConnection();
+            final PreparedStatement statement = connection.prepareStatement(SELECT_BY_NAMES);
+            statement.setString(1, firstName);
+            statement.setString(2, lastName);
+            final ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                final User user = new User(resultSet.getLong(1), resultSet.getString(2), resultSet.getString(3), resultSet.getDate(4));
+                result.add(user);
+            }
+            return result;
+        } catch (final Exception e) {
+            e.printStackTrace();
+            return Collections.EMPTY_LIST;
         }
     }
 
